@@ -273,7 +273,7 @@ class Player {
         gicon: Gio.Icon.new_for_string(url),
         style_class: "system-status-icon",
         icon_size: size,
-        style: "padding: 0px;",
+        style: "padding: 0px; border-radius: 8px;",
       });
     else this.albumArt = null;
 

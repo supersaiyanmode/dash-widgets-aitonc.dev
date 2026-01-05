@@ -94,7 +94,7 @@ export const MusicWidget = GObject.registerClass(
 
       this._playPauseButton.connect("clicked", () => {
         if (this._player) {
-          this._player.toogleStatus();
+          this._player.toggleStatus();
         }
       });
 
@@ -130,8 +130,8 @@ export const MusicWidget = GObject.registerClass(
 
       let dominantColor = null;
       artUrl.style = "padding: 0px; border-radius: 8px;";
-      
-      if(artUrl) {
+
+      if (artUrl) {
         this._musicAlbumArt.set_child(artUrl);
         dominantColor = player.getAlbumArtDominantColor();
       } else {
@@ -148,6 +148,18 @@ export const MusicWidget = GObject.registerClass(
       const isPlaying = player.playbackStatus === "Playing";
       this._playPauseButton.set_child(
         isPlaying ? this.pauseIcon : this.playIcon
+      );
+
+      this._musicMetadata.reactive = true;
+      if (this._musicMetadataSignal) {
+        this._musicMetadata.disconnect(this._musicMetadataSignal);
+      }
+      this._musicMetadataSignal = this._musicMetadata.connect(
+        "button-press-event",
+        () => {
+          player.activatePlayer();
+          return Clutter.EVENT_STOP;
+        }
       );
     }
   }
