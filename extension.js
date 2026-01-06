@@ -1,10 +1,7 @@
-/**
- * 2026 © Aiton Cumbi,
- * All rights reserved.
- */
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 import GObject from "gi://GObject";
 import St from "gi://St";
+import Clutter from "gi://Clutter";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
 import { plugins as pluginList } from "./plugins.js";
 
@@ -16,6 +13,7 @@ const DashContainer = GObject.registerClass(
         vertical: true,
         x_expand: true,
         y_expand: true,
+        y_align: Clutter.ActorAlign.CENTER,
       });
     }
   }
@@ -31,11 +29,10 @@ export default class DashWidgetsExtension extends Extension {
         const module = await import(`./plugins/${pluginName}/widget.js`);
         const Widget = module.default;
         const widget = new Widget();
-        
+
         widget.enable();
         this.plugins.push(widget);
-        this.dashContainer.add_child(widget);
-
+        this.dashContainer.add_child(widget, { expand: false });
       } catch (e) {
         log(`Error loading plugin ${pluginName}: ${e}`);
       }

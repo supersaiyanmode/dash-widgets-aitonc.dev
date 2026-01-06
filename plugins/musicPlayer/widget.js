@@ -11,7 +11,8 @@ export default GObject.registerClass(
         style_class: "music-player-widget",
         vertical: false,
         x_expand: false,
-        y_expand: true,
+        y_expand: false,
+        y_align: Clutter.ActorAlign.CENTER,
         visible: false,
       });
 
@@ -46,12 +47,14 @@ export default GObject.registerClass(
       this._musicArtist = new St.Label({
         style_class: "music-artist",
         text: "",
+        x_align: Clutter.ActorAlign.START,
         y_align: Clutter.ActorAlign.CENTER,
       });
 
       this._musicTitle = new St.Label({
         style_class: "music-title",
         text: "",
+        x_align: Clutter.ActorAlign.START,
         y_align: Clutter.ActorAlign.CENTER,
       });
 
@@ -87,7 +90,7 @@ export default GObject.registerClass(
 
       this._musicMetadata.add_child(this._musicTitle);
       this._musicMetadata.add_child(this._musicArtist);
-      this._musicAlbumArt.set_child(this._musicAlbumArtFallback);
+      // this._musicAlbumArt.set_child(this._musicAlbumArtFallback);
 
       this._musicControls.add_child(this._playPauseButton);
       this._musicControls.add_child(this._nextButton);
@@ -144,7 +147,7 @@ export default GObject.registerClass(
       if (!player) {
         this._musicTitle.set_text("");
         this._musicArtist.set_text("");
-        this._musicAlbumArt.set_child(this._musicAlbumArtFallback);
+        // this._musicAlbumArt.set_child(this._musicAlbumArtFallback);
         this.style = "";
         this._playPauseButton.set_child(this.playIcon);
         return;
@@ -154,15 +157,15 @@ export default GObject.registerClass(
       const artist =
         player.stringFromMetadata("xesam:artist") || "Unknown Artist";
 
-      const artUrl = player.getArtUrlIcon(28);
+      const rawArtUrl = player.getArtRawUrl();
+
+      // Still here due to album dominant color implementation that requires albumArt to be set on player.js
+      const albumArt = player.getArtUrlIcon(28);
 
       let dominantColor = null;
-      if(artUrl) {
-        artUrl.style = "padding: 0px; border-radius: 8px;";
-      }
 
-      if (artUrl) {
-        this._musicAlbumArt.set_child(artUrl);
+      if (albumArt) {
+        this._musicAlbumArt.style = `background: url(${rawArtUrl}); background-size: contain; background-repeat: no-repeat; border-radius: 4px; width: 28px; height: 28px;`;
         dominantColor = player.getAlbumArtDominantColor();
       } else {
         this._musicAlbumArt.set_child(this._musicAlbumArtFallback);

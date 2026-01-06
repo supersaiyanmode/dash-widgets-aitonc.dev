@@ -279,6 +279,12 @@ class Player {
 
     return this.albumArt;
   }
+
+  getArtRawUrl() {
+    const url = this.stringFromMetadata("mpris:artUrl", this.metadata);
+    return url;
+  }
+
   getIcon() {
     let icon = new St.Icon({
       style_class: "system-status-icon",
@@ -374,12 +380,14 @@ class Player {
         true,
         null
       );
-      let pixels = pixbuf.get_pixels();
-      let r = pixels[0];
-      let g = pixels[1];
-      let b = pixels[2];
+      let pixels = pixbuf.read_pixel_bytes().toArray();
+      // Darken the color for better contrast with white text
+      let r = Math.floor(pixels[0] * 0.4);
+      let g = Math.floor(pixels[1] * 0.4);
+      let b = Math.floor(pixels[2] * 0.4);
       return { r, g, b, a: 255 };
     } catch (e) {
+      console.error("Error getting dominant color:", e);
       return null;
     }
   }
