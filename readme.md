@@ -70,3 +70,4 @@ cp -r . ~/.local/share/gnome-shell/extensions/dash-widgets@aitonc.dev.git
 ## 👩‍💻 Author
 Developer: [aitoncumbi](https://github.com/aitoncumbi)  
 Readme.md desing: [Miocasa](https://github.com/Miocasa)
+Maintainer: [supersaiyanmode](https://github.com/supersaiyanmode)
